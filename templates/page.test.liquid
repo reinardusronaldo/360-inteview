@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Responsive Mobile-First Page</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --bg-page: #eef1f5;
+      --bg-hero: #dde3e9;
+      --bg-placeholder: #d8dde4;
+      --bg-band: #6f7d8b;
+      --text-main: #1f2937;
+      --text-muted: #374151;
+      --btn-bg: #5b5ce2;
+      --btn-text: #ffffff;
+      --accent: #3346c7;
+      --white: #ffffff;
+    }
+
+    .main-content{
+      padding-top: 0;
+    }
+
+    body {
+      color: var(--text-main);
+      line-height: 1.5;
+    }
+
+    img {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    a {
+      text-decoration: none;
+    }
+
+    .page {
+      width: 100%;
+      overflow-x: hidden;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 16px;
+    }
+
+    .section {
+      padding: 32px 0;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 10px 18px;
+      background: var(--btn-bg);
+      color: var(--btn-text);
+      font-size: 14px;
+      font-weight: 600;
+      border-radius: 3px;
+      line-height: 1;
+    }
+
+    .hero {
+      text-align: center;
+      background-image: url({{ 'placeholder.png' | asset_url }});
+      display: flex;
+      width: 100%;
+      align-items: center;
+    }
+
+    .hero__title {
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+
+    .hero__text {
+      max-width: 760px;
+      margin: 0 auto;
+      font-size: 14px;
+      color: var(--text-muted);
+    }
+
+    .feature-list {
+      display: grid;
+      gap: 32px;
+      margin-top: 8px;
+    }
+
+    .feature {
+      display: grid;
+      gap: 20px;
+      align-items: center;
+    }
+
+    .feature__image,
+    .final-section__image,
+    .gallery__item {
+      overflow: hidden;
+    }
+
+    .feature__image {
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      border-radius: 4px;
+    }
+
+    .feature__image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .feature__content h2 {
+      font-size: 22px;
+      margin-bottom: 10px;
+      color: #111827;
+    }
+
+    .feature__content p {
+      font-size: 14px;
+      color: var(--text-muted);
+      margin-bottom: 14px;
+      max-width: 520px;
+    }
+
+    .gallery-wrap {
+      padding-top: 4px;
+    }
+
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+
+    .gallery__item {
+      aspect-ratio: 1 / 1;
+      border-radius: 4px;
+    }
+
+    .gallery__item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    
+    .cta-band{
+        position: relative;
+        height:350px;
+        padding:80px 16px;
+
+        display:flex;
+        align-items:center;
+
+        text-align:center;
+        color:white;
+
+        background-image:url({{ 'placeholder.png' | asset_url }});
+        background-size:cover;
+        background-position:center;
+        background-repeat:no-repeat;
+    }
+
+    .cta-band::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:rgba(111,125,139,0.9);
+    }
+
+    .cta-band .container{
+      position:relative;
+      z-index:2;
+      width:100%;
+    }
+
+    .cta-band h3 {
+      font-size: 16px;
+      margin-bottom: 14px;
+      font-weight: 700;
+    }
+
+    .cta-band__form {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      max-width: 420px;
+      margin: 0 auto;
+    }
+
+    .cta-band input {
+      width: 100%;
+      height: 42px;
+      border: none;
+      padding: 0 14px;
+      border-radius: 2px;
+      font-size: 14px;
+      outline: none;
+    }
+
+    .cta-band button {
+      height: 42px;
+      border: none;
+      background: var(--white);
+      color: #374151;
+      font-size: 18px;
+      border-radius: 2px;
+      cursor: pointer;
+    }
+
+    .final-section {
+      background: var(--white);
+      padding: 40px 0;
+    }
+
+    .final-section__wrap {
+      display: grid;
+      gap: 24px;
+      align-items: center;
+    }
+
+    .final-section__label {
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--accent);
+      text-align: center;
+    }
+
+    .final-section__image {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      border-radius: 4px;
+    }
+
+    .final-section__image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .final-section__content p {
+      font-size: 14px;
+      color: var(--text-muted);
+      margin-bottom: 14px;
+      max-width: 420px;
+    }
+
+    @media (min-width: 768px) {
+
+      .hero__title {
+        font-size: 34px;
+      }
+
+      .hero__text {
+        font-size: 15px;
+      }
+
+      .feature {
+        grid-template-columns: 1fr 1fr;
+        gap: 40px;
+      }
+
+      .feature--reverse .feature__image {
+        order: 2;
+      }
+
+      .feature--reverse .feature__content {
+        order: 1;
+      }
+
+      .gallery {
+        grid-template-columns: repeat(4, 1fr);
+      }
+
+      .cta-band__form {
+        flex-direction: row;
+        max-width: 520px;
+      }
+
+      .cta-band input {
+        flex: 1;
+      }
+
+      .cta-band button {
+        width: 56px;
+        flex-shrink: 0;
+      }
+
+      .final-section__wrap {
+        grid-template-columns: 80px 1.1fr 1fr;
+        gap: 40px;
+      }
+
+      .final-section__label {
+        writing-mode: vertical-rl;
+        transform: rotate(180deg);
+        text-align: center;
+        justify-self: center;
+      }
+    }
+
+    @media (min-width: 1024px) {
+      .section {
+        padding: 56px 0;
+      }
+
+      .hero__title {
+        font-size: 40px;
+      }
+
+      .feature__content h2 {
+        font-size: 28px;
+      }
+
+      .feature-list {
+        gap: 56px;
+      }
+
+      .container {
+        padding: 0 24px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+
+    <section class="hero">
+      <div class="container">
+        <h1 class="hero__title">This is the page title</h1>
+        <p class="hero__text">
+          There are many variations of passages of Lorem Ipsum available, but the
+          majority have suffered alteration in some form, by injected humour, or
+          randomised words which don’t look even slightly believable.
+        </p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="feature-list">
+          <article class="feature">
+            <div class="feature__image">
+              <img src="{{ 'placeholder.png' | asset_url }}" alt="Feature image 1" />
+            </div>
+            <div class="feature__content">
+              <h2>This is title 1</h2>
+              <p>
+                There are many variations of passages of Lorem Ipsum available,
+                but the majority have suffered alteration in some form, by
+                injected humour, or randomised words which don’t look even
+                slightly believable.
+              </p>
+              <a href="#" class="btn">Read more</a>
+            </div>
+          </article>
+
+          <article class="feature feature--reverse">
+            <div class="feature__image">
+              <img src="{{ 'placeholder.png' | asset_url }}" alt="Feature image 2" />
+            </div>
+            <div class="feature__content">
+              <h2>This is title 2</h2>
+              <p>
+                There are many variations of passages of Lorem Ipsum available,
+                but the majority have suffered alteration in some form, by
+                injected humour, or randomised words which don’t look even
+                slightly believable.
+              </p>
+              <a href="#" class="btn">Read more</a>
+            </div>
+          </article>
+
+          <section class="gallery-wrap" aria-label="Image gallery">
+            <div class="gallery">
+              <div class="gallery__item">
+                <img src="{{ 'placeholder.png' | asset_url }}" alt="Gallery image 1" />
+              </div>
+              <div class="gallery__item">
+                <img src="{{ 'placeholder.png' | asset_url }}" alt="Gallery image 2" />
+              </div>
+              <div class="gallery__item">
+                <img src="{{ 'placeholder.png' | asset_url }}" alt="Gallery image 3" />
+              </div>
+              <div class="gallery__item">
+                <img src="{{ 'placeholder.png' | asset_url }}" alt="Gallery image 4" />
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+    </section>
+
+    <section class="cta-band">
+        <div class="container">
+            <h3>Join our mailing list</h3>
+
+            <form class="cta-band__form">
+            <input type="email" placeholder="Enter your email" />
+            <button type="submit" aria-label="Submit email">→</button>
+            </form>
+
+        </div>
+    </section>
+
+    <section class="final-section">
+      <div class="container">
+        <div class="final-section__wrap">
+          <div class="final-section__label">Moonblocks</div>
+
+          <div class="final-section__image">
+            <img src="{{ 'placeholder.png' | asset_url }}" alt="Moonblocks featured image" />
+          </div>
+
+          <div class="final-section__content">
+            <p>
+              There are many variations of passages of Lorem Ipsum available,
+              but the majority have suffered alteration in some form.
+            </p>
+            <a href="#" class="btn">Read more</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

@@ -12,7 +12,7 @@
   // Alternate product templates can change values of
   // add to cart button, sold out, and unavailable states here.
   theme.productStrings = {
-    addToCart: {{ 'products.product.add_to_cart' | t | json }},
+    addToCart: {% if product.tags contains 'pre-order' %}"Preorder"{% else %}{{ 'products.product.add_to_cart' | t | json }}{% endif %},
     soldOut: {{ 'products.product.sold_out' | t | json }},
     unavailable: {{ 'products.product.unavailable' | t | json }}
   };

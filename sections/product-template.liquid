@@ -77,49 +77,83 @@
                 <span class="icon__fallback-text">{{ 'sections.slideshow.previous_slide' | t }}</span>
               </button>
             {% endif %}
+            
+            <div class="glide">
+              <div class="glide__track" data-glide-el="track">
+                <ul
+                  class="glide__slides product-single__thumbnails-{{ section.id }}"
+                  data-slider-container
+                  style="width: 100%"
+                >
+                  {% if enable_thumbnail_slides == true %}
+                    <div class="product-single__thumbnails-slider-track" data-slider-track>
+                  {% endif %}
 
-            <ul id="intro" class="product-single__thumbnails product-single__thumbnails-{{ section.id }}" data-slider-container>
-              {% if enable_thumbnail_slides == true %}
-                <div class="product-single__thumbnails-slider-track" data-slider-track>
-              {% endif %}
+                  {% for media in product.media %}
+                    <li
+                      class="glide__slide {% if featured_media.id == media.id %} active-thumb{% endif %}"
+                    >
+                      <a
+                        href="{{ media.preview_image | img_url: product_image_zoom_size, scale: product_image_scale }}"
+                        class="text-link product-single__thumbnail--{{ section.id }}"
+                        data-thumbnail-id="{{ section.id }}-{{ media.id }}"
+                        {% if enable_thumbnail_slides == true %}
+                          data-slider-item-link
+                        {% endif %}
+                        {% if enable_image_zoom %}
+                          data-zoom="{{ media.preview_image | img_url: product_image_zoom_size, scale: product_image_scale }}"
+                        {% endif %}
+                      >
 
-              {% for media in product.media %}
-                <li class="product-single__thumbnails-item product-single__thumbnails-item--{{ section.settings.media_size }} {% if enable_thumbnail_slides == true %} product-single__thumbnails-item-slide{% endif %} js"{% if enable_thumbnail_slides == true %} data-slider-slide-index="{{ forloop.index0 }}" data-slider-item{% endif %}>
-                  <a href="{{ media.preview_image | img_url: product_image_zoom_size, scale: product_image_scale }}"
-                    class="text-link product-single__thumbnail product-single__thumbnail--{{ section.id }}"
-                    data-thumbnail-id="{{ section.id }}-{{ media.id }}"
-                    {% if enable_thumbnail_slides == true %} data-slider-item-link{% endif %}
-                    {% if enable_image_zoom %}data-zoom="{{ media.preview_image | img_url: product_image_zoom_size, scale: product_image_scale }}"{% endif %}>
+                        {%- capture thumbnailAlt -%}
+                          {%- if media.media_type == 'video' or media.media_type == 'external_video' -%}
+                            {{ 'sections.featured_product.video_thumbnail_alt' | t: imageAlt: media.alt | escape }}
+                          {%- elsif media.media_type == 'model' -%}
+                            {{ 'sections.featured_product.model_thumbnail_alt' | t: imageAlt: media.alt | escape }}
+                          {%- else -%}
+                            {{ 'sections.featured_product.gallery_thumbnail_alt' | t: imageAlt: media.alt | escape }}
+                          {%- endif -%}
+                        {%- endcapture -%}
 
-                      {%- capture thumbnailAlt -%}
+                        <img
+                          src="{{ media.preview_image | img_url: '110x110', scale: 2 }}"
+                          alt="{{ thumbnailAlt }}"
+                        >
+
                         {%- if media.media_type == 'video' or media.media_type == 'external_video' -%}
-                          {{ 'sections.featured_product.video_thumbnail_alt' | t: imageAlt: media.alt | escape }}
-                        {%- elsif media.media_type == 'model' -%}
-                          {{ 'sections.featured_product.model_thumbnail_alt' | t: imageAlt: media.alt | escape }}
-                        {%- else -%}
-                          {{ 'sections.featured_product.gallery_thumbnail_alt' | t: imageAlt: media.alt | escape }}
+                          <div class="product-single__thumbnail-badge">
+                            {% include 'icon-video-badge-full-color' %}
+                          </div>
                         {%- endif -%}
-                      {%- endcapture -%}
 
-                      <img class="product-single__thumbnail-image" src="{{ media.preview_image | img_url: '110x110', scale: 2 }}" alt="{{ thumbnailAlt }}">
-                      {%- if media.media_type == 'video' or media.media_type =='external_video' -%}
-                        <div class="product-single__thumbnail-badge">
-                          {% include 'icon-video-badge-full-color' %}
-                        </div>
-                      {%- endif -%}
-                      {%- if media.media_type == 'model' -%}
-                        <div class="product-single__thumbnail-badge">
-                          {% include 'icon-3d-badge-full-color' %}
-                        </div>
-                      {%- endif -%}
-                  </a>
-                </li>
-              {% endfor %}
+                        {%- if media.media_type == 'model' -%}
+                          <div class="product-single__thumbnail-badge">
+                            {% include 'icon-3d-badge-full-color' %}
+                          </div>
+                        {%- endif -%}
 
-              {% if enable_thumbnail_slides == true %}
-                </div>
-              {% endif %}
-            </ul>
+                      </a>
+                    </li>
+                  {% endfor %}
+
+                  {% if enable_thumbnail_slides == true %}
+                    </div>
+                  {% endif %}
+                </ul>
+              </div>
+
+              <div class="glide__arrows" data-glide-el="controls">
+                  <button class="glide__arrow glide__arrow--left" data-glide-dir="<" type="button">
+                    {% include 'icon-chevron-left' %}
+                  </button>
+
+                  <button class="glide__arrow glide__arrow--right" data-glide-dir=">" type="button">
+                    {% include 'icon-chevron-right' %}
+                  </button>
+              </div>
+            </div>
+
+
             {% if enable_thumbnail_slides == true %}
               <button type="button" class="btn btn--link medium-up--hide thumbnails-slider__btn thumbnails-slider__next thumbnails-slider__next--{{ section.id }}" data-slider-button data-slider-button-next>
                 {% include 'icon-chevron-right' %}
@@ -217,7 +251,10 @@
                 {%- if section.settings.enable_payment_button %} product-form__item--payment-button {%- endif -%}
                 {%- if product.has_only_default_variant %} product-form__item--no-variants {%- endif -%}"
               >
-                <button type="submit" name="add"
+                <button style="
+                    background-color: {{ settings.add_to_cart_bg }};
+                    color: {{ settings.add_to_cart_text }};
+                  " type="submit" name="add"
                   {% unless current_variant.available %} aria-disabled="true"{% endunless %}
                   aria-label="{% unless current_variant.available %}{{ 'products.product.sold_out' | t }}{% else %}{{ 'products.product.add_to_cart' | t }}{% endunless %}"
                   class="btn product-form__cart-submit{% if section.settings.enable_payment_button and product.selling_plan_groups == empty %} btn--secondary-accent{% endif %}"
@@ -227,7 +264,11 @@
                     {% unless current_variant.available %}
                       {{ 'products.product.sold_out' | t }}
                     {% else %}
+                      {% if product.tags contains 'pre-order' %}
+                        Preorder
+                      {% else %}
                       {{ 'products.product.add_to_cart' | t }}
+                      {% endif %}
                     {% endunless %}
                   </span>
                   <span class="hide" data-loader>
@@ -290,21 +331,43 @@
 {% endunless %}
 
 <script>
-    var glide = new Glide('#intro', {
-    type: 'carousel',
-    perView: 4,
-    focusAt: 'center',
-    breakpoints: {
-      800: {
-        perView: 2
-      },
-      480: {
-        perView: 1
+  document.addEventListener('DOMContentLoaded', function () {
+
+    const glideEl = document.querySelector('.glide');
+
+    const config = {
+      type: "slider",
+      perView: 3,
+      rewind: false,
+      bound: true,
+      breakpoints:{
+        800:{
+          perView: 2
+        }
       }
     }
-  })
 
-  glide.mount()
+    new Glide('.glide', config).mount();
+
+    function setActiveSlide(slideEl) {
+      const slides = glideEl.querySelectorAll('.glide__slide');
+      slides.forEach(function (slide) {
+        slide.classList.remove('is-active');
+      });
+
+      if (slideEl) {
+        slideEl.classList.add('is-active');
+      }
+    }
+
+    glideEl.addEventListener('click', function (e) {
+      const link = e.target.closest('[data-thumbnail-id]');
+      if (!link) return;
+
+      const slide = link.closest('.glide__slide');
+      setActiveSlide(slide);
+    });
+  });
 </script>
 
 

@@ -7083,3 +7083,29 @@ hr {
   a:hover {
     color: #fff;
   }
+
+
+.glide__slide {
+  border: 1px solid transparent;
+  box-sizing: border-box;
+}
+
+.glide__slide.is-active {
+  border: 2px solid #000;
+}
+
+.glide__slide a {
+  display: block;
+}
+
+.glide{
+  position: relative;
+}
+
+.glide__arrows{
+  width: 100%;
+}
+
+.glide__arrow svg {
+  fill: black;
+}
